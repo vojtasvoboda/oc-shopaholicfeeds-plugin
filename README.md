@@ -23,15 +23,15 @@ Require Lovata.OrdersShopaholic plugin.
 
 - Google Merchant RSS 2.0
 
-## Add your own format:
-
-For adding new format, copy file `/plugins/vojtasvoboda/shopaholicfeeds/config/config.php` to
-`/config/vojtasvoboda/shopaholicfeeds/config.php` and add new builder.
-
 ## Settings
 
 - feed locale is optional: when not selected, default locale will be used
 - currency is optional: when not selected, currency attribute will be hidden and prices will be in default currency
+
+## Add your own format:
+
+For adding new format, copy file `/plugins/vojtasvoboda/shopaholicfeeds/config/config.php` to
+`/config/vojtasvoboda/shopaholicfeeds/config.php` and add new builder.
 
 ## Contributing
 
