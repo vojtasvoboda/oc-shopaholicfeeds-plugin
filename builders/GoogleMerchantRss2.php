@@ -154,7 +154,9 @@ class GoogleMerchantRss2 extends BaseBuilder
             $brand = $product->brand;
             if ($translatable === true) {
                 $product->translateContext($locale->code);
-                $brand->translateContext($locale->code);
+                if ($brand !== null) {
+                    $brand->translateContext($locale->code);
+                }
                 $link = url($router->urlFromPattern($cmsPageUrl, ['slug' => $product->slug]));
             }
 
@@ -175,7 +177,9 @@ class GoogleMerchantRss2 extends BaseBuilder
             if ($product->preview_image) {
                 $item->appendChild($xml->createElement('image_link', $product->preview_image->path));
             }
-            $item->appendChild($xml->createElement('brand', $brand->name));
+            if ($brand !== null) {
+                $item->appendChild($xml->createElement('brand', $brand->name));
+            }
             $item->appendChild($xml->createElement('availability', $availability));
             $item->appendChild($xml->createElement('gtin', $product->external_id));
             $item->appendChild($xml->createElement('condition', 'new'));
