@@ -1,0 +1,39 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    id:
+        label: ID
+        sortable: true
+    feed:
+        label: Feed
+        relation: feed
+        select: name
+    remote_addr:
+        label: Remote address
+        sortable: true
+        searchable: true
+    allowed:
+        label: Allowed
+        type: switch
+    uri:
+        label: URI
+        sortable: true
+        searchable: true
+    method:
+        label: Method
+        sortable: true
+        searchable: true
+    params:
+        label: Parameters
+        sortable: true
+        searchable: true
+    took_seconds:
+        label: Took seconds
+        sortable: true
+    created_at:
+        label: Created at
+        type: datetime
+        sortable: true
+        format: d.m.Y H:i:s

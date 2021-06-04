@@ -1,0 +1,74 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    links@update:
+        tab: Basic
+        type: partial
+    name:
+        label: Name
+        span: left
+        required: true
+    slug@create:
+        label: Slug
+        span: right
+        required: true
+        preset:
+            field: name
+            type: slug
+    slug@update:
+        label: Slug
+        span: right
+        required: true
+tabs:
+    fields:
+        format:
+            tab: Basic
+            label: Format
+            type: dropdown
+        currency:
+            tab: Basic
+            label: Currency
+            type: relation
+            emptyOption: Generate without currency specified.
+        product_page:
+            tab: Basic
+            label: Product detail page
+            type: dropdown
+            required: true
+        only_private:
+            tab: Basic
+            label: Private
+            type: checkbox
+            comment: Makes feed available only by private URL
+        log_enabled:
+            tab: Basic
+            label: Log enabled
+            type: checkbox
+            comment: Enable access log for the feed
+            default: true
+        enabled:
+            tab: Basic
+            label: Enabled
+            type: checkbox
+            default: true
+        ip_addresses:
+            tab: IP addresses
+            commentAbove: List of the allowed IP addresses. Keep empty to unlimited access.
+            type: repeater
+            prompt: Add new allowed IP address
+            titleFrom: ip
+            form:
+                fields:
+                    name:
+                        placeholder: Label
+                        required: true
+                        span: left
+                    ip_addr:
+                        placeholder: IP address
+                        required: true
+                        span: right
+        logs@update:
+            tab: Access log
+            type: partial

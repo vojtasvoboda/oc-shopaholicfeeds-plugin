@@ -1,0 +1,20 @@
+{
+    "name": "vojtasvoboda/shopaholicfeeds-plugin",
+    "description": "Feeds for Shopaholic plugin for OctoberCMS",
+    "type": "october-plugin",
+    "keywords": ["shopaholic", "xml", "feeds"],
+    "require": {
+        "php": ">=7.0.8",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "composer/installers": "^1.10"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vojta Svoboda",
+            "email": "vojtasvoboda.cz@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}

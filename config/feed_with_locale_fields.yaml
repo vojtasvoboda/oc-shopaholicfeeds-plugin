@@ -1,0 +1,4 @@
+locale:
+    tab: Basic
+    label: Locale
+    type: relation

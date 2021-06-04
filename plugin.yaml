@@ -1,0 +1,5 @@
+plugin:
+    name: 'Feeds for Shopaholic'
+    description: 'Manage XML feeds for Shopaholic'
+    author: 'Vojta Svoboda'
+    icon: icon-file-code-o

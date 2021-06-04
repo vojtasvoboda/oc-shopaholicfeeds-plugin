@@ -1,0 +1,4 @@
+1.0.0:
+    - First version of ShopaholicFeeds
+    - create_feeds_table.php
+    - create_logs_table.php

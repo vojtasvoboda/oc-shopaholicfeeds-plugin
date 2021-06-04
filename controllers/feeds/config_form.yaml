@@ -1,0 +1,31 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Feed
+
+# Model Form Field configuration
+form: $/vojtasvoboda/shopaholicfeeds/models/feed/fields.yaml
+
+# Model Class name
+modelClass: VojtaSvoboda\ShopaholicFeeds\Models\Feed
+
+# Default redirect location
+defaultRedirect: vojtasvoboda/shopaholicfeeds/feeds
+
+# Create page
+create:
+    title: Create Feed
+    redirect: vojtasvoboda/shopaholicfeeds/feeds/update/:id
+    redirectClose: vojtasvoboda/shopaholicfeeds/feeds
+
+# Update page
+update:
+    title: Edit Feed
+    redirect: vojtasvoboda/shopaholicfeeds/feeds
+    redirectClose: vojtasvoboda/shopaholicfeeds/feeds
+
+# Preview page
+preview:
+    title: Preview Feed

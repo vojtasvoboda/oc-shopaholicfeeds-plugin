@@ -1,0 +1,14 @@
+<?php
+    $public = url('/feeds/' . $model->slug . '.xml');
+    $private = url('/feeds/' . $model->slug . '-' . $model->hash . '.xml');
+?>
+<div class="callout fade in callout-info no-subheader">
+    <div class="header">
+        <i class="icon-info"></i>
+        <h3>Feed URLs</h3>
+        <p>
+            Public URL: <a href="<?= $public ?>"><?= $public ?></a><br />
+            Private URL: <a href="<?= $private ?>"><?= $private ?></a>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+<?php
+
+$options = $record->getFormatOptions();
+echo e(isset($options[$record->format]) ? $options[$record->format] : '-');

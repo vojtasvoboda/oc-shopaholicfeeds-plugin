@@ -1,0 +1,14 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+logs:
+    label: logs
+    view:
+        list: $/vojtasvoboda/shopaholicfeeds/models/log/columns.yaml
+        toolbarButtons: false
+        showCheckboxes: false
+        showSearch: false
+        defaultSort:
+            column: id
+            direction: desc

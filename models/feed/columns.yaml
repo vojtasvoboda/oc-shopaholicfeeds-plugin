@@ -1,0 +1,43 @@
+# ===================================
+#  List Column Definitions
+# ===================================
+
+columns:
+    name:
+        label: Name
+        sortable: true
+    format:
+        label: Format
+        type: partial
+    locale:
+        label: Locale
+        sortable: true
+        relation: locale
+        select: code
+    currency:
+        label: Currency
+        sortable: true
+        relation: currency
+        select: name
+    only_private:
+        label: Private
+        type: switch
+        sortable: true
+    log_enabled:
+        label: With log
+        type: switch
+        sortable: true
+    enabled:
+        label: Enabled
+        type: switch
+        sortable: true
+    created_at:
+        label: Created at
+        type: datetime
+        sortable: true
+        format: d.m.Y H:i:s
+    updated_at:
+        label: Updated at
+        type: datetime
+        sortable: true
+        format: d.m.Y H:i:s
