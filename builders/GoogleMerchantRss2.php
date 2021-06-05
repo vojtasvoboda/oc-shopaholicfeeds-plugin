@@ -4,6 +4,7 @@ use Cms\Classes\Page;
 use Cms\Classes\Theme;
 use DOMDocument;
 use DOMElement;
+use Lovata\Shopaholic\Classes\Item\ProductItem;
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Models\Product;
 use October\Rain\Router\Router;
@@ -150,14 +151,16 @@ class GoogleMerchantRss2 extends BaseBuilder
             }
 
             // set locale and get product link
-            $link = Page::url($product_page, ['slug' => $product->slug]);
+            $productItem = ProductItem::make($product->id);
+            $productParams = $productItem->getPageParamList($product_page);
+            $link = Page::url($product_page, $productParams);
             $brand = $product->brand;
             if ($translatable === true) {
                 $product->translateContext($locale->code);
                 if ($brand !== null) {
                     $brand->translateContext($locale->code);
                 }
-                $link = url($router->urlFromPattern($cmsPageUrl, ['slug' => $product->slug]));
+                $link = url($router->urlFromPattern($cmsPageUrl, $productParams));
             }
 
             // set currency
