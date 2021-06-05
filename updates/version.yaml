@@ -3,3 +3,4 @@
     - create_feeds_table.php
     - create_logs_table.php
 1.0.1: Fix when product brand is not defined
+1.0.2: Makes compatible with older Laravel

@@ -189,7 +189,7 @@ class GoogleMerchantRss2 extends BaseBuilder
             }
 
             // add to the collection
-            $elements->add($item);
+            $elements->push($item);
         }
 
         return $elements;
