@@ -24,7 +24,7 @@ class GoogleMerchantRss2 extends BaseBuilder
      * @param string $format
      * @return array
      */
-    public function getHeaders($format)
+    public function getHeaders($format): array
     {
         if ($format === 'xml') {
             return [
@@ -54,7 +54,7 @@ class GoogleMerchantRss2 extends BaseBuilder
     /**
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getProductsToExport()
+    public function getProductsToExport(): \Illuminate\Database\Eloquent\Collection
     {
         return Product::active()->with(['brand', 'offer'])->get();
     }
@@ -62,7 +62,7 @@ class GoogleMerchantRss2 extends BaseBuilder
     /**
      * @return DOMDocument
      */
-    private function createXmlDocument()
+    private function createXmlDocument(): DOMDocument
     {
         // create new XML document
         $xml = new DOMDocument();
@@ -80,12 +80,12 @@ class GoogleMerchantRss2 extends BaseBuilder
      * @param DOMDocument $xml
      * @return DOMElement
      */
-    private function createRssElement($xml)
+    private function createRssElement(DOMDocument $xml): DOMElement
     {
         // create RSS element
         $rss = $xml->createElement('rss');
         $rss->setAttribute('version', '2.0');
-
+        $rss->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:g', 'http://base.google.com/ns/1.0');
         // append channel element
         $channel = $this->createChannelElement($xml);
         $rss->appendChild($channel);
@@ -97,7 +97,7 @@ class GoogleMerchantRss2 extends BaseBuilder
      * @param DOMDocument $xml
      * @return DOMElement
      */
-    private function createChannelElement($xml)
+    private function createChannelElement(DOMDocument $xml): DOMElement
     {
         // create channel element
         $channel = $xml->createElement('channel');
@@ -114,6 +114,20 @@ class GoogleMerchantRss2 extends BaseBuilder
     }
 
     /**
+     * @param DOMDocument $xml
+     * @param DOMElement $item
+     * @param $images
+     * @return void $item
+     */
+    private function createAdditionalImagesElement(DOMDocument $xml, DOMElement $item, $images)
+    {
+        foreach ($images as $image) {
+            $element = $xml->createElement('g:additional_image_link', $image->path);
+            $item->appendChild(clone $element);
+        }
+    }
+
+    /**
      * Create product elements.
      * - feed locale is optional, null locale = default locale / no translation
      * - feed currency is optional, null currency = no currency
@@ -121,7 +135,7 @@ class GoogleMerchantRss2 extends BaseBuilder
      * @param DOMDocument $xml
      * @return Collection
      */
-    private function createItemsElements($xml)
+    private function createItemsElements(DOMDocument $xml): Collection
     {
         // init
         $elements = collect();
@@ -155,10 +169,18 @@ class GoogleMerchantRss2 extends BaseBuilder
             $productParams = $productItem->getPageParamList($product_page);
             $link = Page::url($product_page, $productParams);
             $brand = $product->brand;
+            $category = $product->category;
+
+
             if ($translatable === true) {
                 $product->translateContext($locale->code);
+                // brand
                 if ($brand !== null) {
                     $brand->translateContext($locale->code);
+                }
+                // category
+                if ($category !== null) {
+                    $category->translateContext($locale->code);
                 }
                 $link = url($router->urlFromPattern($cmsPageUrl, $productParams));
             }
@@ -175,20 +197,38 @@ class GoogleMerchantRss2 extends BaseBuilder
             $item = $xml->createElement('item');
             $item->appendChild($xml->createElement('id', $product->id));
             $item->appendChild($xml->createElement('title', $product->name));
-            $item->appendChild($xml->createElement('description', $product->preview_text));
+            $item->appendChild($xml->createElement('g:description', $product->preview_text));
             $item->appendChild($xml->createElement('link', $link));
             if ($product->preview_image) {
-                $item->appendChild($xml->createElement('image_link', $product->preview_image->path));
+                $item->appendChild($xml->createElement('g:image_link', $product->preview_image->path));
+            }
+
+            if ($product->images) {
+                $this->createAdditionalImagesElement($xml, $item, $product->images);
             }
             if ($brand !== null) {
-                $item->appendChild($xml->createElement('brand', $brand->name));
+                $item->appendChild($xml->createElement('g:brand', $brand->name));
             }
             $item->appendChild($xml->createElement('availability', $availability));
-            $item->appendChild($xml->createElement('gtin', $product->external_id));
+            $item->appendChild($xml->createElement('gtin', $product->code));
             $item->appendChild($xml->createElement('condition', 'new'));
-            $item->appendChild($xml->createElement('price', $offer->price_value));
+            $item->appendChild($xml->createElement('g:price', $offer->price_value));
             if (!empty($currencyCode)) {
                 $item->appendChild($xml->createElement('currency', $currencyCode));
+            }
+            if ($category !== null) {
+                $item->appendChild($xml->createElement('g:google_product_category', $category->name));
+            }
+
+            // set weight unit
+            $weightUnit = $this->getWeightMeasureCode();
+            if ($weightUnit === null) {
+                $weightUnit = 'g';
+            }
+
+            // set product weight
+            if ($offer->weight !== null) {
+                $item->appendChild($xml->createElement('product_weight', $offer->weight.$weightUnit));
             }
 
             // add to the collection
