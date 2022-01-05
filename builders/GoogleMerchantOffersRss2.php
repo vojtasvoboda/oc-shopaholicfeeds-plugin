@@ -182,7 +182,7 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
 
             // create item element
             $item = $xml->createElement('item');
-            $item->appendChild($xml->createElement('id', $offer->id));
+            $item->appendChild($xml->createElement('id', $product->code));
             $item->appendChild($xml->createElement('title', $name));
             $item->appendChild($xml->createElement('g:description', $description));
             $item->appendChild($xml->createElement('link', $link));
@@ -198,7 +198,7 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
                 $item->appendChild($xml->createElement('g:brand', $brand->name));
             }
             $item->appendChild($xml->createElement('availability', $availability));
-            $item->appendChild($xml->createElement('gtin', $product->code));
+            $item->appendChild($xml->createElement('gtin', $product->external_id));
             $item->appendChild($xml->createElement('condition', 'new'));
             $item->appendChild($xml->createElement('g:price', $offer->price_value));
             if (!empty($currencyCode)) {

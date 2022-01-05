@@ -35,7 +35,7 @@ abstract class BaseBuilder
     /**
      * @return string|null
      */
-    public function getWeightMeasureCode()
+    public function getWeightMeasureCode(): ?string
     {
         $iMeasureID = Settings::getValue('weight_measure');
         if (empty($iMeasureID)) {
