@@ -56,7 +56,7 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
      */
     public function getOffersToExport(): OfferCollection
     {
-		return OfferCollection::make()->active();
+        return OfferCollection::make()->active();
     }
 
     /**
@@ -86,6 +86,7 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
         $rss = $xml->createElement('rss');
         $rss->setAttribute('version', '2.0');
         $rss->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:g', 'http://base.google.com/ns/1.0');
+
         // append channel element
         $channel = $this->createChannelElement($xml);
         $rss->appendChild($channel);
@@ -111,20 +112,6 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
         });
 
         return $channel;
-    }
-
-    /**
-     * @param DOMDocument $xml
-     * @param DOMElement $item
-     * @param $images
-     * @return void $item
-     */
-    private function createAdditionalImagesElement(DOMDocument $xml, DOMElement $item, $images)
-    {
-        foreach ($images as $image) {
-            $element = $xml->createElement('g:additional_image_link', $image->path);
-            $item->appendChild(clone $element);
-        }
     }
 
     /**
@@ -156,26 +143,27 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
             $cmsPageUrl = $cmsPage->url;
         }
 
+        // prepare weight unit
+        $weightUnit = $this->getWeightMeasureCode();
+	    
         /** @var Product $product Create element for each product. */
         foreach ($this->getOffersToExport() as $offer) {
             /** @var Product $product */
             $product = $offer->product;
 
-            // set locale and get product link
+            // get product link
             $productItem = ProductItem::make($product->id);
             $productParams = $productItem->getPageParamList($product_page);
             $link = Page::url($product_page, $productParams);
+            
+            // set locale
             $brand = $product->brand;
             $category = $product->category;
-
-
             if ($translatable === true) {
                 $product->translateContext($locale->code);
-                // brand
                 if ($brand !== null) {
                     $brand->translateContext($locale->code);
                 }
-                // category
                 if ($category !== null) {
                     $category->translateContext($locale->code);
                 }
@@ -187,22 +175,9 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
                 $offer->setActiveCurrency($currencyCode);
             }
 
-            if ($offer->name !== '') {
-                $name = $offer->name;
-            }
-            else {
-                $name = $product->name;
-            }
-
-            // set description
-            if ($offer->preview_text !== '') {
-                $description = $offer->preview_text;
-            }
-            else {
-                $description = $product->preview_text;
-            }
-
-            // availability
+            // prepare attributes
+            $name = !empty($offer->name) ? $offer->name : $product->name;
+            $description = !empty($offer->preview_text) ? $offer->preview_text : $product->preview_text;
             $availability = $offer->quantity > 0 ? 'in stock' : 'out of stock';
 
             // create item element
@@ -214,9 +189,10 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
             if ($product->preview_image) {
                 $item->appendChild($xml->createElement('g:image_link', $product->preview_image->path));
             }
-
             if ($product->images) {
-                $this->createAdditionalImagesElement($xml, $item, $product->images);
+                foreach ($product->images as $image) {
+                    $item->appendChild($xml->createElement('g:additional_image_link', $image->path));
+                }
             }
             if ($brand !== null) {
                 $item->appendChild($xml->createElement('g:brand', $brand->name));
@@ -231,16 +207,8 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
             if ($category !== null) {
                 $item->appendChild($xml->createElement('g:google_product_category', $category->name));
             }
-
-            // set product weight
             if ($offer->weight !== null) {
-                $weightUnit = $this->getWeightMeasureCode();
-                if ($weightUnit === null) {
-                    $weightUnit = 'g';
-                }
-                $weightText = $offer->weight.$weightUnit;
-
-                $item->appendChild($xml->createElement('product_weight', $weightText));
+                $item->appendChild($xml->createElement('product_weight', trim($offer->weight . ' ' . $weightUnit)));
             }
 
             // add to the collection
