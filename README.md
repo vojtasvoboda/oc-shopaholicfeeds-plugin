@@ -19,9 +19,10 @@ Note: locale definition is available only with **RainLab.Translate** plugin.
 
 Require Lovata.OrdersShopaholic plugin.
 
-## Available formats:
+## Available feeds:
 
-- Google Merchant RSS 2.0
+- Google Merchant RSS 2.0 for Products
+- Google Merchant RSS 2.0 for Offers
 
 ## Settings
 

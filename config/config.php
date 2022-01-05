@@ -9,11 +9,11 @@ return [
      */
     'builders' => [
         'google-merchant-rss20' => [
-            'name' => 'Google Merchant RSS 2.0',
+            'name' => 'Google Merchant RSS 2.0 for Products',
             'class' => 'VojtaSvoboda\ShopaholicFeeds\Builders\GoogleMerchantRss2',
         ],
         'google-merchant-offers-rss20' => [
-            'name' => 'Offers - Google Merchant RSS 2.0',
+            'name' => 'Google Merchant RSS 2.0 for Offers',
             'class' => 'VojtaSvoboda\ShopaholicFeeds\Builders\GoogleMerchantOffersRss2',
         ],
     ],
