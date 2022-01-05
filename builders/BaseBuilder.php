@@ -32,22 +32,21 @@ abstract class BaseBuilder
      */
     abstract public function getOutput($format);
 
-	/**
-	 * Get weight measure code
-	 * @return string|null
-	 */
-	public function getWeightMeasureCode()
-	{
-		$iMeasureID = Settings::getValue('weight_measure');
-		if (empty($iMeasureID)) {
-			return null;
-		}
+    /**
+     * @return string|null
+     */
+    public function getWeightMeasureCode()
+    {
+        $iMeasureID = Settings::getValue('weight_measure');
+        if (empty($iMeasureID)) {
+            return null;
+        }
 
-		$obMeasure = Measure::find($iMeasureID);
-		if (empty($obMeasure)) {
-			return null;
-		}
+        $obMeasure = Measure::find($iMeasureID);
+        if (empty($obMeasure)) {
+            return null;
+        }
 
-		return $obMeasure->code;
-	}
+        return $obMeasure->code;
+    }
 }
