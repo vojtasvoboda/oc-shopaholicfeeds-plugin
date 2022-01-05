@@ -54,7 +54,7 @@ class GoogleMerchantRss2 extends BaseBuilder
     /**
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getProductsToExport(): \Illuminate\Database\Eloquent\Collection
+    private function getProductsToExport(): \Illuminate\Database\Eloquent\Collection
     {
         return Product::active()->with(['brand', 'offer'])->get();
     }
@@ -86,6 +86,7 @@ class GoogleMerchantRss2 extends BaseBuilder
         $rss = $xml->createElement('rss');
         $rss->setAttribute('version', '2.0');
         $rss->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:g', 'http://base.google.com/ns/1.0');
+
         // append channel element
         $channel = $this->createChannelElement($xml);
         $rss->appendChild($channel);
@@ -111,20 +112,6 @@ class GoogleMerchantRss2 extends BaseBuilder
         });
 
         return $channel;
-    }
-
-    /**
-     * @param DOMDocument $xml
-     * @param DOMElement $item
-     * @param $images
-     * @return void $item
-     */
-    private function createAdditionalImagesElement(DOMDocument $xml, DOMElement $item, $images)
-    {
-        foreach ($images as $image) {
-            $element = $xml->createElement('g:additional_image_link', $image->path);
-            $item->appendChild(clone $element);
-        }
     }
 
     /**
@@ -156,6 +143,9 @@ class GoogleMerchantRss2 extends BaseBuilder
             $cmsPageUrl = $cmsPage->url;
         }
 
+        // prepare weight unit
+        $weightUnit = $this->getWeightMeasureCode();
+
         /** @var Product $product Create element for each product. */
         foreach ($this->getProductsToExport() as $product) {
             /** @var Offer $offer */
@@ -164,21 +154,19 @@ class GoogleMerchantRss2 extends BaseBuilder
                 continue;
             }
 
-            // set locale and get product link
+            // get product link
             $productItem = ProductItem::make($product->id);
             $productParams = $productItem->getPageParamList($product_page);
             $link = Page::url($product_page, $productParams);
+
+            // set locale
             $brand = $product->brand;
             $category = $product->category;
-
-
             if ($translatable === true) {
                 $product->translateContext($locale->code);
-                // brand
                 if ($brand !== null) {
                     $brand->translateContext($locale->code);
                 }
-                // category
                 if ($category !== null) {
                     $category->translateContext($locale->code);
                 }
@@ -202,9 +190,10 @@ class GoogleMerchantRss2 extends BaseBuilder
             if ($product->preview_image) {
                 $item->appendChild($xml->createElement('g:image_link', $product->preview_image->path));
             }
-
             if ($product->images) {
-                $this->createAdditionalImagesElement($xml, $item, $product->images);
+                foreach ($product->images as $image) {
+                    $item->appendChild($xml->createElement('g:additional_image_link', $image->path));
+                }
             }
             if ($brand !== null) {
                 $item->appendChild($xml->createElement('g:brand', $brand->name));
@@ -219,16 +208,8 @@ class GoogleMerchantRss2 extends BaseBuilder
             if ($category !== null) {
                 $item->appendChild($xml->createElement('g:google_product_category', $category->name));
             }
-
-            // set weight unit
-            $weightUnit = $this->getWeightMeasureCode();
-            if ($weightUnit === null) {
-                $weightUnit = 'g';
-            }
-
-            // set product weight
             if ($offer->weight !== null) {
-                $item->appendChild($xml->createElement('product_weight', $offer->weight.$weightUnit));
+                $item->appendChild($xml->createElement('product_weight', trim($offer->weight . ' ' . $weightUnit)));
             }
 
             // add to the collection
