@@ -9,6 +9,7 @@ use System\Classes\PluginBase;
 use System\Classes\PluginManager;
 use VojtaSvoboda\ShopaholicFeeds\Controllers\Feeds;
 use VojtaSvoboda\ShopaholicFeeds\Models\Feed;
+use VojtaSvoboda\ShopaholicFeeds\Classes\ExtendOfferCollection;
 use Yaml;
 
 /**
@@ -46,6 +47,9 @@ class Plugin extends PluginBase
 
             return;
         }
+
+        // link custom offer collection method
+        Event::subscribe(ExtendOfferCollection::class);
 
         // extend VojtaSvoboda.ShopaholicFeeds Feed model
         Feed::extend(function ($model) {

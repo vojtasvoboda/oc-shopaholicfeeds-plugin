@@ -12,5 +12,9 @@ return [
             'name' => 'Google Merchant RSS 2.0',
             'class' => 'VojtaSvoboda\ShopaholicFeeds\Builders\GoogleMerchantRss2',
         ],
+	    'alza-marketplace-custom' => [
+		    'name' => 'Alza Marketplace Custom',
+		    'class' => 'VojtaSvoboda\ShopaholicFeeds\Builders\AlzaMarketplaceCustomFeed',
+	    ],
     ],
 ];
