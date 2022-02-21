@@ -16,5 +16,9 @@ return [
             'name' => 'Google Merchant RSS 2.0 for Offers',
             'class' => 'VojtaSvoboda\ShopaholicFeeds\Builders\GoogleMerchantOffersRss2',
         ],
+        'alza-marketplace-offers-rss20' => [
+            'name' => 'Alza Marketplace RSS 2.0 for Offers',
+            'class' => 'VojtaSvoboda\ShopaholicFeeds\Builders\AlzaMarketplaceOffersRss2',
+        ],
     ],
 ];
