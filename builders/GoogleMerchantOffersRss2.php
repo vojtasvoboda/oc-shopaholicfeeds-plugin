@@ -5,8 +5,9 @@ use Cms\Classes\Theme;
 use DOMDocument;
 use DOMElement;
 use Lovata\Shopaholic\Classes\Collection\OfferCollection;
+use Lovata\Shopaholic\Classes\Item\OfferItem;
 use Lovata\Shopaholic\Classes\Item\ProductItem;
-use Lovata\Shopaholic\Models\Product;
+use Lovata\Shopaholic\Models\Offer;
 use October\Rain\Router\Router;
 use October\Rain\Support\Collection;
 use System\Classes\PluginManager;
@@ -145,10 +146,11 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
 
         // prepare weight unit
         $weightUnit = $this->getWeightMeasureCode();
-	    
-        /** @var Product $product Create element for each product. */
-        foreach ($this->getOffersToExport() as $offer) {
-            /** @var Product $product */
+        
+        /** @var OfferItem $offer Create element for each offer. */
+        foreach ($this->getOffersToExport() as $offerItem) {
+            /** @var Offer $offer */
+            $offer = $offerItem->getObject();
             $product = $offer->product;
 
             // get product link
@@ -160,6 +162,7 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
             $brand = $product->brand;
             $category = $product->category;
             if ($translatable === true) {
+                $offer->translateContext($locale->code);
                 $product->translateContext($locale->code);
                 if ($brand !== null) {
                     $brand->translateContext($locale->code);
@@ -183,7 +186,7 @@ class GoogleMerchantOffersRss2 extends BaseBuilder
             // create item element
             $item = $xml->createElement('item');
             $item->appendChild($xml->createElement('id', $product->code));
-            $item->appendChild($xml->createElement('title', $name));
+            $item->appendChild($xml->createElement('title', htmlspecialchars($name)));
             $item->appendChild($xml->createElement('g:description', $description));
             $item->appendChild($xml->createElement('link', $link));
             if ($product->preview_image) {

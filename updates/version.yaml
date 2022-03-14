@@ -7,3 +7,4 @@
 1.0.3: Fix getting product URL when product page doesn't have only slug parameter
 1.0.4: Add Google Merchant feed for Offers
 1.0.5: Add Alza Marketplace feed for Offers
+1.0.6: Minor fixes

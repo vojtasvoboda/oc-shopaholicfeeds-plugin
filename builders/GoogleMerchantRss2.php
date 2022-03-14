@@ -184,7 +184,7 @@ class GoogleMerchantRss2 extends BaseBuilder
             // create item element
             $item = $xml->createElement('item');
             $item->appendChild($xml->createElement('id', $product->code));
-            $item->appendChild($xml->createElement('title', $product->name));
+            $item->appendChild($xml->createElement('title', htmlspecialchars($product->name)));
             $item->appendChild($xml->createElement('g:description', $product->preview_text));
             $item->appendChild($xml->createElement('link', $link));
             if ($product->preview_image) {

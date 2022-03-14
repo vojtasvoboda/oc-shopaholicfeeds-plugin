@@ -5,7 +5,6 @@ use Cms\Classes\Theme;
 use DOMDocument;
 use DOMElement;
 use Lovata\Shopaholic\Models\Offer;
-use Lovata\Shopaholic\Models\Product;
 use October\Rain\Support\Collection;
 use System\Classes\PluginManager;
 
@@ -136,9 +135,8 @@ class AlzaMarketplaceOffersRss2 extends BaseBuilder
             $cmsPage->rewriteTranslatablePageUrl($locale->code);
         }
 
-        /** @var Product $product Create element for each product. */
+        /** @var Offer $offer Create element for each offer. */
         foreach ($this->getOffersToExport() as $offer) {
-            /** @var Offer $offer */
             $product = $offer->product;
 
             if ($offer === null || $offer->count() === 0) {
@@ -154,7 +152,7 @@ class AlzaMarketplaceOffersRss2 extends BaseBuilder
 
             // create item element
             $item = $xml->createElement('item');
-            $item->appendChild($xml->createElement('name', $name));
+            $item->appendChild($xml->createElement('name', htmlspecialchars($name)));
             $item->appendChild($xml->createElement('ean', $product->external_id));
             $item->appendChild($xml->createElement('quantity', $offer->quantity));
             $item->appendChild($xml->createElement('price', $offer->price_value));
