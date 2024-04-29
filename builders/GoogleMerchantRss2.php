@@ -206,7 +206,7 @@ class GoogleMerchantRss2 extends BaseBuilder
                 $item->appendChild($xml->createElement('currency', $currencyCode));
             }
             if ($category !== null) {
-                $item->appendChild($xml->createElement('g:google_product_category', $category->name));
+                $item->appendChild($xml->createElement('g:google_product_category', htmlspecialchars(($category->name)));
             }
             if ($offer->weight !== null) {
                 $item->appendChild($xml->createElement('product_weight', trim($offer->weight . ' ' . $weightUnit)));
