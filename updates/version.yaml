@@ -8,3 +8,4 @@
 1.0.4: Add Google Merchant feed for Offers
 1.0.5: Add Alza Marketplace feed for Offers
 1.0.6: Minor fixes
+1.0.7: Convert special characters, thanks to @sergiFlowbox
